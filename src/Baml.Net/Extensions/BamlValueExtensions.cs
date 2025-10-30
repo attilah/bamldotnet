@@ -180,4 +180,25 @@ public static class BamlValueExtensions
         // The state (PENDING/STARTED/DONE) is metadata we don't need for the value itself
         return streamingState.Value?.ToObject();
     }
+
+    /// <summary>
+    /// Converts a dictionary to a list of CFFIMapEntry items.
+    /// </summary>
+    /// <param name="dict">Dictionary to convert.</param>
+    /// <returns>List of CFFIMapEntry items.</returns>
+    public static List<CFFIMapEntry> ToCFFIMapEntries(this Dictionary<string, object> dict)
+    {
+        var entries = new List<CFFIMapEntry>();
+
+        foreach (var (key, value) in dict)
+        {
+            entries.Add(new CFFIMapEntry
+            {
+                Key = key,
+                Value = value.ToCFFI()
+            });
+        }
+
+        return entries;
+    }
 }

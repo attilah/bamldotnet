@@ -178,6 +178,66 @@ public sealed class BamlRuntime : IDisposable
     }
 
     /// <summary>
+    /// Parses an LLM response without making an actual LLM call.
+    /// Used for testing and replay scenarios.
+    /// </summary>
+    /// <param name="functionName">Name of the function to parse for.</param>
+    /// <param name="args">Function arguments including the text to parse (will be serialized to protobuf).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Task that resolves to the parsed result as a raw buffer.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when runtime is disposed.</exception>
+    /// <exception cref="ArgumentNullException">Thrown when functionName is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when parsing fails.</exception>
+    public async Task<byte[]> ParseAsync(string functionName, byte[] args, CancellationToken cancellationToken = default)
+    {
+        ThrowIfDisposed();
+
+        if (functionName == null)
+            throw new ArgumentNullException(nameof(functionName));
+
+        return await BamlNativeHelpers.CallFunctionParseAsync(_runtimeHandle, functionName, args, cancellationToken);
+    }
+
+    /// <summary>
+    /// Creates a BAML collector object for aggregating LLM responses.
+    /// </summary>
+    /// <param name="args">Constructor arguments (will be serialized to protobuf).</param>
+    /// <returns>The constructed collector object as a raw buffer.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when runtime is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when object construction fails.</exception>
+    public byte[] CreateCollector(byte[] args)
+    {
+        ThrowIfDisposed();
+        return BamlNativeHelpers.CallObjectConstructor(args);
+    }
+
+    /// <summary>
+    /// Creates a BAML type builder object for dynamic type construction.
+    /// </summary>
+    /// <param name="args">Constructor arguments (will be serialized to protobuf).</param>
+    /// <returns>The constructed type builder object as a raw buffer.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when runtime is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when object construction fails.</exception>
+    public byte[] CreateTypeBuilder(byte[] args)
+    {
+        ThrowIfDisposed();
+        return BamlNativeHelpers.CallObjectConstructor(args);
+    }
+
+    /// <summary>
+    /// Invokes a method on a BAML object (collector, type builder, etc.).
+    /// </summary>
+    /// <param name="methodArgs">Method arguments including the object reference (will be serialized to protobuf).</param>
+    /// <returns>The method result as a raw buffer.</returns>
+    /// <exception cref="ObjectDisposedException">Thrown when runtime is disposed.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when method invocation fails.</exception>
+    public byte[] InvokeObjectMethod(byte[] methodArgs)
+    {
+        ThrowIfDisposed();
+        return BamlNativeHelpers.CallObjectMethod(_runtimeHandle, methodArgs);
+    }
+
+    /// <summary>
     /// Disposes the runtime and frees associated resources.
     /// </summary>
     public void Dispose()

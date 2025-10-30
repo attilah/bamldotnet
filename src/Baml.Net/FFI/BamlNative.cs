@@ -167,6 +167,60 @@ internal static partial class BamlNative
         uint callbackId);
 
     /// <summary>
+    /// Parses an LLM response without making an actual LLM call.
+    /// Used for testing and replay scenarios.
+    /// </summary>
+    /// <param name="runtime">Handle to the runtime instance.</param>
+    /// <param name="functionName">Pointer to null-terminated function name string.</param>
+    /// <param name="args">Pointer to protobuf-encoded arguments containing the text to parse.</param>
+    /// <param name="argsLen">Length of the arguments buffer.</param>
+    /// <param name="callbackId">Callback identifier for async operations.</param>
+    /// <returns>Pointer to error string on failure, IntPtr.Zero on success.</returns>
+    [LibraryImport(LibName, EntryPoint = "call_function_parse_from_c")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    internal static partial IntPtr CallFunctionParse(
+        IntPtr runtime,
+        IntPtr functionName,
+        IntPtr args,
+        nuint argsLen,
+        uint callbackId);
+
+    /// <summary>
+    /// Cancels an in-flight function call by its callback ID.
+    /// </summary>
+    /// <param name="callbackId">The callback identifier to cancel.</param>
+    /// <returns>Always returns IntPtr.Zero.</returns>
+    [LibraryImport(LibName, EntryPoint = "cancel_function_call")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    internal static partial IntPtr CancelFunctionCall(uint callbackId);
+
+    /// <summary>
+    /// Creates a BAML object (collector, media, type builder, etc.).
+    /// </summary>
+    /// <param name="args">Pointer to protobuf-encoded constructor arguments.</param>
+    /// <param name="argsLen">Length of the arguments buffer.</param>
+    /// <returns>Buffer containing the constructed object or error.</returns>
+    [LibraryImport(LibName, EntryPoint = "call_object_constructor")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    internal static partial Buffer CallObjectConstructor(
+        IntPtr args,
+        nuint argsLen);
+
+    /// <summary>
+    /// Invokes a method on a BAML object.
+    /// </summary>
+    /// <param name="runtime">Handle to the runtime instance.</param>
+    /// <param name="args">Pointer to protobuf-encoded method arguments.</param>
+    /// <param name="argsLen">Length of the arguments buffer.</param>
+    /// <returns>Buffer containing the method result or error.</returns>
+    [LibraryImport(LibName, EntryPoint = "call_object_method")]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    internal static partial Buffer CallObjectMethod(
+        IntPtr runtime,
+        IntPtr args,
+        nuint argsLen);
+
+    /// <summary>
     /// Callback delegate for function results (both success and streaming).
     /// </summary>
     /// <param name="callbackId">The callback identifier.</param>

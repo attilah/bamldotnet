@@ -206,4 +206,153 @@ internal static class BamlNativeHelpers
                 Marshal.FreeHGlobal(argArrayPtr);
         }
     }
+
+    /// <summary>
+    /// Parses an LLM response without making an actual LLM call.
+    /// Used for testing and replay scenarios.
+    /// </summary>
+    /// <param name="runtime">Handle to the runtime instance.</param>
+    /// <param name="functionName">Name of the function to parse for.</param>
+    /// <param name="argsData">Protobuf-encoded arguments containing the text to parse.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Task that resolves to the parsed result as protobuf-encoded bytes.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when parsing fails.</exception>
+    public static async Task<byte[]> CallFunctionParseAsync(
+        IntPtr runtime,
+        string functionName,
+        byte[] argsData,
+        CancellationToken cancellationToken = default)
+    {
+        // Create callback and get task
+        var (callbackId, task) = BamlCallbackManager.CreateCallback(cancellationToken);
+
+        IntPtr functionNamePtr = IntPtr.Zero;
+        IntPtr argsPtr = IntPtr.Zero;
+
+        try
+        {
+            // Marshal function name as null-terminated C string
+            var functionNameBytes = Encoding.UTF8.GetBytes(functionName + '\0');
+            functionNamePtr = Marshal.AllocHGlobal(functionNameBytes.Length);
+            Marshal.Copy(functionNameBytes, 0, functionNamePtr, functionNameBytes.Length);
+
+            // Marshal arguments
+            argsPtr = Marshal.AllocHGlobal(argsData.Length);
+            Marshal.Copy(argsData, 0, argsPtr, argsData.Length);
+
+            // Call the native parse function
+            var errorPtr = BamlNative.CallFunctionParse(
+                runtime,
+                functionNamePtr,
+                argsPtr,
+                (nuint)argsData.Length,
+                callbackId);
+
+            // The function returns NULL on success (async task spawned), error pointer on failure
+            if (errorPtr != IntPtr.Zero)
+            {
+                var error = Marshal.PtrToStringUTF8(errorPtr) ?? "Unknown error";
+                throw new InvalidOperationException($"Failed to parse function '{functionName}': {error}");
+            }
+
+            // Wait for async result via callback
+            return await task;
+        }
+        finally
+        {
+            if (functionNamePtr != IntPtr.Zero)
+                Marshal.FreeHGlobal(functionNamePtr);
+            if (argsPtr != IntPtr.Zero)
+                Marshal.FreeHGlobal(argsPtr);
+        }
+    }
+
+    /// <summary>
+    /// Creates a BAML object (collector, media, type builder, etc.).
+    /// </summary>
+    /// <param name="argsData">Protobuf-encoded constructor arguments.</param>
+    /// <returns>The constructed object as protobuf-encoded bytes.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when object construction fails.</exception>
+    public static byte[] CallObjectConstructor(byte[] argsData)
+    {
+        IntPtr argsPtr = IntPtr.Zero;
+
+        try
+        {
+            // Marshal arguments
+            argsPtr = Marshal.AllocHGlobal(argsData.Length);
+            Marshal.Copy(argsData, 0, argsPtr, argsData.Length);
+
+            // Call the native constructor
+            var buffer = BamlNative.CallObjectConstructor(argsPtr, (nuint)argsData.Length);
+
+            try
+            {
+                // Read the result
+                var result = ReadBuffer(buffer);
+
+                // Check if it's an error by trying to parse as CFFIObjectResponse
+                // We'll handle error checking in the higher-level APIs
+                return result;
+            }
+            finally
+            {
+                // Free the buffer returned by native code
+                if (buffer.Data != IntPtr.Zero)
+                {
+                    BamlNative.FreeBuffer(buffer);
+                }
+            }
+        }
+        finally
+        {
+            if (argsPtr != IntPtr.Zero)
+                Marshal.FreeHGlobal(argsPtr);
+        }
+    }
+
+    /// <summary>
+    /// Invokes a method on a BAML object.
+    /// </summary>
+    /// <param name="runtime">Handle to the runtime instance.</param>
+    /// <param name="argsData">Protobuf-encoded method arguments.</param>
+    /// <returns>The method result as protobuf-encoded bytes.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when method invocation fails.</exception>
+    public static byte[] CallObjectMethod(IntPtr runtime, byte[] argsData)
+    {
+        IntPtr argsPtr = IntPtr.Zero;
+
+        try
+        {
+            // Marshal arguments
+            argsPtr = Marshal.AllocHGlobal(argsData.Length);
+            Marshal.Copy(argsData, 0, argsPtr, argsData.Length);
+
+            // Call the native method
+            var buffer = BamlNative.CallObjectMethod(runtime, argsPtr, (nuint)argsData.Length);
+
+            try
+            {
+                // Read the result
+                var result = ReadBuffer(buffer);
+
+                // Check if it's an error by trying to parse as CFFIObjectResponse
+                // We'll handle error checking in the higher-level APIs
+                return result;
+            }
+            finally
+            {
+                // Free the buffer returned by native code
+                if (buffer.Data != IntPtr.Zero)
+                {
+                    BamlNative.FreeBuffer(buffer);
+                }
+            }
+        }
+        finally
+        {
+            if (argsPtr != IntPtr.Zero)
+                Marshal.FreeHGlobal(argsPtr);
+        }
+    }
 }

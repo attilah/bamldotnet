@@ -87,6 +87,9 @@ internal static class BamlCallbackManager
             {
                 cancellationToken.Register(() =>
                 {
+                    // Call native cancellation function
+                    BamlNative.CancelFunctionCall(callbackId);
+
                     if (_pendingCallbacks.TryRemove(callbackId, out var ctx))
                     {
                         ctx.TrySetCanceled(cancellationToken);
@@ -129,6 +132,27 @@ internal static class BamlCallbackManager
         {
             context.OnTick();
         }
+    }
+
+    /// <summary>
+    /// Cancels a pending callback operation.
+    /// This calls the native cancellation function and cleans up the callback.
+    /// </summary>
+    /// <param name="callbackId">The callback ID to cancel.</param>
+    /// <returns>True if the callback was found and cancelled, false otherwise.</returns>
+    public static bool CancelCallback(uint callbackId)
+    {
+        // Call native cancellation function
+        BamlNative.CancelFunctionCall(callbackId);
+
+        // Remove and cancel the pending callback
+        if (_pendingCallbacks.TryRemove(callbackId, out var context))
+        {
+            context.TrySetCanceled(CancellationToken.None);
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
