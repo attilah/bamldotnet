@@ -1,0 +1,10 @@
+<Project>
+  <!-- Copy native library to output directory -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\runtimes\osx-x64\native\libbaml_cffi.dylib">
+      <Link>libbaml_cffi.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+</Project>

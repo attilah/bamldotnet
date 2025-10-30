@@ -1,0 +1,4 @@
+<Project>
+  <!-- Note: This file is included in the Baml.Net NuGet package and will auto-reference native packages -->
+  <!-- The version is embedded during pack time, so consuming projects don't need to specify it -->
+</Project>

@@ -1,0 +1,10 @@
+<Project>
+  <!-- Copy native library to output directory -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\runtimes\linux-x64\native\libbaml_cffi.so">
+      <Link>libbaml_cffi.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+<Project>
+  <!-- Copy native library to output directory -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\baml_cffi.dll">
+      <Link>baml_cffi.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+</Project>

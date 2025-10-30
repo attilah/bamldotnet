@@ -1,0 +1,7 @@
+{
+  "diagnosticMessages": true,
+  "internalDiagnosticMessages": true,
+  "execution": {
+    "strategy": "in-process"
+  }
+}
