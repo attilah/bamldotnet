@@ -201,11 +201,13 @@ else
 fi
 
 if [ ${#failed_platforms[@]} -gt 0 ]; then
-    echo -e "${RED}Failed platforms: ${failed_platforms[*]}${NC}"
-    exit 1
-else
+    echo -e "${YELLOW}Failed platforms: ${failed_platforms[*]}${NC}"
+    echo -e "${YELLOW}Warning: Some platforms failed to download. Continuing anyway...${NC}"
+fi
+
+if [ $success_count -gt 0 ]; then
     echo ""
-    echo -e "${GREEN}All native binaries downloaded successfully!${NC}"
+    echo -e "${GREEN}Downloaded $success_count platform(s) successfully!${NC}"
     echo ""
     echo -e "${CYAN}Next steps:${NC}"
     echo -e "${GRAY}  1. Enable package generation in Directory.Build.props:${NC}"
@@ -213,4 +215,7 @@ else
     echo -e "${GRAY}  2. Build NuGet packages:${NC}"
     echo -e "${GRAY}     dotnet pack Baml.Net.sln${NC}"
     exit 0
+else
+    echo -e "${RED}No platforms were downloaded successfully!${NC}"
+    exit 1
 fi
