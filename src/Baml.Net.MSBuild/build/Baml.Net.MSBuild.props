@@ -1,0 +1,15 @@
+<Project>
+  <!-- Default BAML MSBuild settings -->
+  <PropertyGroup>
+    <!-- Enable/disable BAML metadata generation -->
+    <BamlEnableMetadataGeneration Condition="'$(BamlEnableMetadataGeneration)' == ''">true</BamlEnableMetadataGeneration>
+
+    <!-- Output path for generated metadata -->
+    <BamlMetadataOutputPath Condition="'$(BamlMetadataOutputPath)' == ''">$(IntermediateOutputPath)</BamlMetadataOutputPath>
+  </PropertyGroup>
+
+  <!-- Define the Baml item type -->
+  <ItemGroup>
+    <AvailableItemName Include="Baml" />
+  </ItemGroup>
+</Project>

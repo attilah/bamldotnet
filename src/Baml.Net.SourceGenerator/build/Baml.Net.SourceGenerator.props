@@ -1,0 +1,33 @@
+<Project>
+  <!-- Default BAML source generator settings -->
+  <PropertyGroup>
+    <!-- Enable/disable BAML code generation -->
+    <BamlEnableCodeGeneration Condition="'$(BamlEnableCodeGeneration)' == ''">true</BamlEnableCodeGeneration>
+
+    <!-- Enable/disable logging in generated code -->
+    <BamlEnableCodeGenLogging Condition="'$(BamlEnableCodeGenLogging)' == ''">false</BamlEnableCodeGenLogging>
+
+    <!-- Include default BAML items automatically -->
+    <IncludeDefaultBamlItems Condition="'$(IncludeDefaultBamlItems)' == ''">true</IncludeDefaultBamlItems>
+
+    <!-- Default BAML file pattern -->
+    <DefaultBamlIncludes Condition="'$(DefaultBamlIncludes)' == ''">**/*.baml</DefaultBamlIncludes>
+  </PropertyGroup>
+
+  <!-- Make MSBuild properties available to the generator -->
+  <ItemGroup>
+    <CompilerVisibleProperty Include="BamlEnableCodeGeneration" />
+    <CompilerVisibleProperty Include="BamlEnableCodeGenLogging" />
+    <CompilerVisibleProperty Include="IncludeDefaultBamlItems" />
+  </ItemGroup>
+
+  <!-- Include default BAML items if enabled -->
+  <ItemGroup Condition="'$(BamlEnableCodeGeneration)' == 'true' AND '$(IncludeDefaultBamlItems)' == 'true'">
+    <Baml Include="$(DefaultBamlIncludes)" />
+  </ItemGroup>
+
+  <!-- Make Baml items visible to the source generator -->
+  <ItemGroup>
+    <CompilerVisibleItemMetadata Include="Baml" MetadataName="Identity" />
+  </ItemGroup>
+</Project>

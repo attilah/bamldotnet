@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <PackageId>Baml.Net.SourceGenerator</PackageId>
+    <Description>Source generator for BAML.NET - generates typed clients from BAML files</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <!-- Package the generator in the analyzer directory of the NuGet package -->
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <!-- Package MSBuild props and targets files -->
+  <ItemGroup>
+    <None Include="build\Baml.Net.SourceGenerator.props" Pack="true" PackagePath="build" />
+    <None Include="build\Baml.Net.SourceGenerator.targets" Pack="true" PackagePath="build" />
+  </ItemGroup>
+</Project>

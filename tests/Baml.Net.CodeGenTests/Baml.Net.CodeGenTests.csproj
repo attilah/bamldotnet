@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Testing Framework -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="DotNetEnv" />
+  </ItemGroup>
+
+  <!-- Reference the main library -->
+  <ItemGroup>
+    <ProjectReference Include="../../src/Baml.Net/Baml.Net.csproj" />
+  </ItemGroup>
+
+  <!-- Reference the MSBuild task (generates metadata) -->
+  <ItemGroup>
+    <ProjectReference Include="../../src/Baml.Net.MSBuild/Baml.Net.MSBuild.csproj"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Reference the source generator (generates code from metadata) -->
+  <ItemGroup>
+    <ProjectReference Include="../../src/Baml.Net.SourceGenerator/Baml.Net.SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Include BAML files -->
+  <ItemGroup>
+    <Baml Include="BamlFiles\**\*.baml" />
+  </ItemGroup>
+
+  <!-- Import MSBuild props and targets -->
+  <Import Project="../../src/Baml.Net.MSBuild/build/Baml.Net.MSBuild.props" />
+
+  <!-- Enable metadata generation and code generation -->
+  <PropertyGroup>
+    <BamlEnableMetadataGeneration>true</BamlEnableMetadataGeneration>
+    <BamlEnableCodeGeneration>true</BamlEnableCodeGeneration>
+    <BamlEnableCodeGenLogging>false</BamlEnableCodeGenLogging>
+  </PropertyGroup>
+
+  <Import Project="../../src/Baml.Net.MSBuild/build/Baml.Net.MSBuild.targets" />
+</Project>

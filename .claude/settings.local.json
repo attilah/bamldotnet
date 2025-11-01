@@ -25,7 +25,18 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(dotnet test:*)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(ai)",
+      "Bash(llm)",
+      "Bash(agent)",
+      "Bash(agentic)",
+      "Bash(git push:*)",
+      "Bash(gh pr create --title \"Modernize project structure and native package configuration\" --body \"$(cat <<''EOF''\n## Summary\n\nComprehensive refactoring to improve maintainability, align with .NET best practices, and modernize the build system.\n\n## Key Changes\n\n### 🏗️ Project Structure\n- **Reorganized** native packages from `src/Native/` → `bindings/`\n- **Created** `bindings/Directory.Build.props` for centralized configuration\n- **Simplified** native .csproj files: 42 lines → 13 lines each\n- **Added** `scripts/` directory for build scripts\n- **Added** `assets/` directory for package branding\n\n### 📦 Package Configuration\n- **Implemented** buildTransitive for modern PackageReference support\n- **Removed** legacy packages.config support (build/ folders)\n- **Centralized** package version management with `Directory.Packages.props`\n- **Added** Apache 2.0 LICENSE from BoundaryML/baml repository\n- **Configured** artifacts output: `artifacts/nuget/`\n\n### ⚙️ Build System\n- **Added** `global.json` to pin .NET SDK version (9.0.300)\n- **Updated** version strategy: Version (1.0.0.0) separate from BamlNativeVersion (0.212.0)\n- **Added** InvariantGlobalization: true\n\n### 🧪 Test Infrastructure\n- **Migrated** BAML test files from gitignored directories to test project\n- **Added** `TestData/BamlFiles/` (3 integration test files)\n- **Integrated** `TestBamlSrc/` (119 comprehensive test files + media)\n- **Updated** test paths to use output directory references\n\n## Benefits\n\n✅ **Maintainability**: Reduced code duplication by 70% in native packages  \n✅ **Modern .NET**: buildTransitive support for proper dependency flow  \n✅ **Self-contained tests**: No external dependencies, all files version controlled  \n✅ **Better organization**: Clear separation of concerns (bindings/, scripts/, assets/)  \n✅ **Easier onboarding**: Simpler project structure, centralized configuration  \n\n## Package Structure\n\n### Main Package (Baml.Net.nupkg)\n```\n├── LICENSE (Apache 2.0)\n├── logo.png\n└── lib/net9.0/Baml.Net.dll\n```\n\n### Native Packages (e.g., Baml.Net.Native.osx-x64.nupkg)\n```\n├── runtimes/osx-x64/native/libbaml_cffi.dylib\n└── buildTransitive/Baml.Net.Native.targets\n```\n\n## Verification\n\n### Build Status\n- ✅ Solution builds successfully\n- ✅ All 6 native packages generate correctly\n- ✅ All 92 tests pass (46 seconds)\n- ✅ Packages output to `artifacts/nuget/`\n\n### Changed Files\n- **45 files changed**: +875 insertions, -375 deletions\n- **Created**: 20 new files (bindings, configs, assets)\n- **Deleted**: 12 old native package files\n- **Modified**: 13 files (configs, tests, solution)\n\n## Testing Instructions\n\n```bash\n# Build the solution\ndotnet build\n\n# Run all tests\ndotnet test\n\n# Pack packages\ndotnet pack\n\n# Check artifacts\nls artifacts/nuget/\n```\n\n## Migration Notes\n\n### Breaking Changes\n- Native packages moved from `src/Native/` to `bindings/`\n- Package output now in `artifacts/nuget/` instead of `bin/Debug/`\n- Native packages no longer support packages.config (buildTransitive only)\n\n### No Impact On\n- Public API surface\n- Package consumption via PackageReference\n- Runtime behavior\n- Test functionality\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\nEOF\n)\")",
+      "Bash(.gitignore)",
+      "Bash(git commit:*)",
+      "Bash(gh pr view:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []

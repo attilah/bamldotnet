@@ -29,6 +29,20 @@
     </Content>
   </ItemGroup>
 
+  <!-- Reference source generator -->
+  <ItemGroup>
+    <ProjectReference Include="../Baml.Net.SourceGenerator/Baml.Net.SourceGenerator.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Configure BAML generation -->
+  <PropertyGroup>
+    <!-- Users can override these in their projects -->
+    <BamlEnableCodeGeneration>true</BamlEnableCodeGeneration>
+    <BamlEnableCodeGenLogging>$(EnableLogging)</BamlEnableCodeGenLogging>
+  </PropertyGroup>
+
   <!-- Reference native packages for development (when not using NuGet package) -->
   <ItemGroup>
     <ProjectReference Include="../../bindings/Baml.Net.Native.win-x64/Baml.Net.Native.win-x64.csproj"

@@ -1,0 +1,18 @@
+<Project>
+  <!-- Pass Baml items to the source generator as AdditionalFiles -->
+  <Target Name="_IncludeBamlFilesForGenerator" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <AdditionalFiles Include="@(Baml)" KeepMetadata="Identity" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Watch BAML files for changes -->
+  <ItemGroup>
+    <Watch Include="@(Baml)" Condition="'$(BamlEnableCodeGeneration)' == 'true'" />
+  </ItemGroup>
+
+  <!-- Ensure BAML files are available during design-time builds -->
+  <ItemGroup>
+    <AvailableItemName Include="Baml" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "namespace": "BamlClient",
+  "types": [
+    {
+      "name": "Sentiment",
+      "kind": "Enum",
+      "values": [
+        { "name": "Happy", "value": "Happy" },
+        { "name": "Sad", "value": "Sad" },
+        { "name": "Angry", "value": "Angry" }
+      ],
+      "isDynamic": false
+    },
+    {
+      "name": "Recipe",
+      "kind": "Record",
+      "properties": [
+        { "name": "Title", "type": "string", "nullable": false },
+        { "name": "Ingredients", "type": "List<string>", "nullable": false },
+        { "name": "Calories", "type": "int", "nullable": true }
+      ],
+      "isDynamic": false
+    }
+  ],
+  "functions": [
+    {
+      "name": "AnalyzeSentiment",
+      "async": true,
+      "parameters": [
+        { "name": "text", "type": "string", "nullable": false }
+      ],
+      "returnType": "Sentiment",
+      "returnNullable": false
+    },
+    {
+      "name": "GetRecipe",
+      "async": true,
+      "parameters": [
+        { "name": "name", "type": "string", "nullable": false }
+      ],
+      "returnType": "Recipe",
+      "returnNullable": false
+    }
+  ],
+  "clients": [],
+  "retryPolicies": []
+}

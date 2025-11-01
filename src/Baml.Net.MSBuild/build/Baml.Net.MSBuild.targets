@@ -1,0 +1,60 @@
+<Project>
+  <!-- Define the metadata generation task -->
+  <!-- When used as NuGet package: $(MSBuildThisFileDirectory) = .../build/ -->
+  <!-- When imported directly: $(MSBuildThisFileDirectory) = .../src/Baml.Net.MSBuild/build/ -->
+  <PropertyGroup>
+    <BamlMSBuildTaskAssembly Condition="'$(BamlMSBuildTaskAssembly)' == '' AND Exists('$(MSBuildThisFileDirectory)../build/net9.0/Baml.Net.MSBuild.dll')">$(MSBuildThisFileDirectory)../build/net9.0/Baml.Net.MSBuild.dll</BamlMSBuildTaskAssembly>
+    <BamlMSBuildTaskAssembly Condition="'$(BamlMSBuildTaskAssembly)' == '' AND Exists('$(MSBuildThisFileDirectory)../bin/Debug/net9.0/Baml.Net.MSBuild.dll')">$(MSBuildThisFileDirectory)../bin/Debug/net9.0/Baml.Net.MSBuild.dll</BamlMSBuildTaskAssembly>
+    <BamlMSBuildTaskAssembly Condition="'$(BamlMSBuildTaskAssembly)' == '' AND Exists('$(MSBuildThisFileDirectory)../bin/Release/net9.0/Baml.Net.MSBuild.dll')">$(MSBuildThisFileDirectory)../bin/Release/net9.0/Baml.Net.MSBuild.dll</BamlMSBuildTaskAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="GenerateBamlMetadata" AssemblyFile="$(BamlMSBuildTaskAssembly)" />
+
+  <!-- Run metadata generation before CoreCompile -->
+  <Target Name="GenerateBamlMetadataTarget"
+          BeforeTargets="CoreGenerateAssemblyInfo"
+          Condition="'$(BamlEnableMetadataGeneration)' == 'true' AND '@(Baml)' != ''"
+          Inputs="@(Baml)"
+          Outputs="$(IntermediateOutputPath)baml-metadata.json">
+
+    <!-- Set default output path if not specified -->
+    <PropertyGroup>
+      <BamlMetadataOutputPathResolved Condition="'$(BamlMetadataOutputPath)' == ''">$(IntermediateOutputPath)</BamlMetadataOutputPathResolved>
+      <BamlMetadataOutputPathResolved Condition="'$(BamlMetadataOutputPath)' != ''">$(BamlMetadataOutputPath)</BamlMetadataOutputPathResolved>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Running BAML metadata generation task..." />
+    <Message Importance="high" Text="IntermediateOutputPath: $(IntermediateOutputPath)" />
+    <Message Importance="high" Text="BamlMetadataOutputPathResolved: $(BamlMetadataOutputPathResolved)" />
+
+    <GenerateBamlMetadata
+      ProjectDir="$(MSBuildProjectDirectory)"
+      IntermediateOutputPath="$(BamlMetadataOutputPathResolved)"
+      BamlFiles="@(Baml)">
+      <Output TaskParameter="MetadataFile" ItemName="BamlMetadataFile" />
+    </GenerateBamlMetadata>
+
+    <Message Importance="high" Text="Generated metadata: @(BamlMetadataFile)" />
+  </Target>
+
+  <!-- Add BAML files and metadata file as AdditionalFiles for source generator -->
+  <!-- This must run after metadata generation but before CoreCompile -->
+  <Target Name="AddBamlFilesToAdditionalFiles"
+          AfterTargets="GenerateBamlMetadataTarget"
+          BeforeTargets="CoreCompile"
+          Condition="'$(BamlEnableMetadataGeneration)' == 'true'">
+    <ItemGroup>
+      <!-- Add BAML source files -->
+      <AdditionalFiles Include="@(Baml)" Condition="'@(Baml)' != ''" />
+      <!-- Add metadata file -->
+      <AdditionalFiles Include="@(BamlMetadataFile)" Condition="'@(BamlMetadataFile)' != ''" />
+    </ItemGroup>
+    <Message Importance="high" Text="Added BAML files to AdditionalFiles: @(Baml)" />
+    <Message Importance="high" Text="Added metadata to AdditionalFiles: @(BamlMetadataFile)" />
+  </Target>
+
+  <!-- Watch BAML files for changes -->
+  <ItemGroup>
+    <Watch Include="@(Baml)" Condition="'$(BamlEnableMetadataGeneration)' == 'true'" />
+  </ItemGroup>
+</Project>
