@@ -172,8 +172,8 @@ internal static class BamlNativeHelpers
     /// <returns>Exit code from the CLI invocation.</returns>
     public static int InvokeRuntimeCli(string[] args)
     {
-        // Allocate array of string pointers
-        var argPtrs = new IntPtr[args.Length];
+        // Allocate array of string pointers with null terminator
+        var argPtrs = new IntPtr[args.Length + 1]; // +1 for null terminator
         var argArrayPtr = IntPtr.Zero;
 
         try
@@ -187,19 +187,23 @@ internal static class BamlNativeHelpers
                 Marshal.WriteByte(argPtrs[i], bytes.Length, 0); // null terminator
             }
 
-            // Marshal array of pointers
-            argArrayPtr = Marshal.AllocHGlobal(IntPtr.Size * args.Length);
-            Marshal.Copy(argPtrs, 0, argArrayPtr, args.Length);
+            // Add null terminator to the array
+            argPtrs[args.Length] = IntPtr.Zero;
 
-            return BamlNative.InvokeRuntimeCli(argArrayPtr, args.Length);
+            // Marshal array of pointers (including null terminator)
+            argArrayPtr = Marshal.AllocHGlobal(IntPtr.Size * (args.Length + 1));
+            Marshal.Copy(argPtrs, 0, argArrayPtr, args.Length + 1);
+
+            // Call with single parameter (no argc)
+            return BamlNative.InvokeRuntimeCli(argArrayPtr);
         }
         finally
         {
-            // Free all allocated memory
-            foreach (var ptr in argPtrs)
+            // Free all allocated memory (except the null terminator which is IntPtr.Zero)
+            for (int i = 0; i < args.Length; i++)
             {
-                if (ptr != IntPtr.Zero)
-                    Marshal.FreeHGlobal(ptr);
+                if (argPtrs[i] != IntPtr.Zero)
+                    Marshal.FreeHGlobal(argPtrs[i]);
             }
 
             if (argArrayPtr != IntPtr.Zero)

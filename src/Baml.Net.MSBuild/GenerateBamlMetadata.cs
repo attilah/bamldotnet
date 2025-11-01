@@ -106,7 +106,11 @@ namespace Baml.Net.MSBuild
 
                 // Invoke CLI to generate metadata using csharp/metadata target
                 var outputDir = Path.GetDirectoryName(metadataPath);
-                var args = new[] { "generate", "--target", "csharp/metadata", "--output", outputDir };
+                // First arg is program name (argv[0]), then actual command and flags
+                // Check if there's a baml_src subdirectory, otherwise use project directory
+                var bamlSrcPath = Path.Combine(ProjectDir, "baml_src");
+                var fromPath = Directory.Exists(bamlSrcPath) ? bamlSrcPath : ProjectDir;
+                var args = new[] { "baml", "generate", "--from", fromPath };
 
                 Log.LogMessage(MessageImportance.High, $"Invoking BAML CLI: {string.Join(" ", args)}");
 
@@ -131,10 +135,43 @@ namespace Baml.Net.MSBuild
                     return false;
                 }
 
-                if (!File.Exists(metadataPath))
+                // Look for the generated metadata file
+                // The CLI generates it based on the output_dir in the generator configuration
+                // Common locations include baml_client/baml-metadata.json or baml_client/baml_client/baml-metadata.json
+                string? generatedMetadataPath = null;
+
+                // Check common output locations relative to project directory
+                // Check nested directories first as they often contain the actual generated content
+                var possiblePaths = new[]
                 {
-                    Log.LogError($"BAML CLI did not generate metadata file at expected path: {metadataPath}");
+                    Path.Combine(ProjectDir, "baml_client", "baml_client", "baml-metadata.json"),
+                    Path.Combine(ProjectDir, "baml_client", "baml-metadata.json"),
+                    Path.Combine(ProjectDir, "generated", "baml-metadata.json"),
+                    Path.Combine(ProjectDir, "output", "baml-metadata.json"),
+                    Path.Combine(ProjectDir, "baml-metadata.json")
+                };
+
+                foreach (var path in possiblePaths)
+                {
+                    if (File.Exists(path))
+                    {
+                        generatedMetadataPath = path;
+                        Log.LogMessage(MessageImportance.High, $"Found generated metadata at: {path}");
+                        break;
+                    }
+                }
+
+                if (generatedMetadataPath == null)
+                {
+                    Log.LogError($"BAML CLI did not generate metadata file. Checked locations: {string.Join(", ", possiblePaths)}");
                     return false;
+                }
+
+                // Copy the metadata to the expected location for the source generator
+                if (generatedMetadataPath != metadataPath)
+                {
+                    File.Copy(generatedMetadataPath, metadataPath, overwrite: true);
+                    Log.LogMessage(MessageImportance.High, $"Copied metadata from {generatedMetadataPath} to {metadataPath}");
                 }
 
                 Log.LogMessage(MessageImportance.High, $"Successfully generated BAML metadata: {metadataPath}");

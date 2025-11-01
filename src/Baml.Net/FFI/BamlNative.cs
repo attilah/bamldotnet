@@ -121,12 +121,11 @@ internal static partial class BamlNative
     /// <summary>
     /// Invokes the BAML CLI with the provided arguments.
     /// </summary>
-    /// <param name="args">Array of argument strings.</param>
-    /// <param name="argc">Number of arguments.</param>
+    /// <param name="args">Null-terminated array of argument string pointers.</param>
     /// <returns>Exit code from the CLI invocation.</returns>
     [LibraryImport(LibName, EntryPoint = "invoke_runtime_cli")]
     [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-    internal static partial int InvokeRuntimeCli(IntPtr args, int argc);
+    internal static partial int InvokeRuntimeCli(IntPtr args);
 
     /// <summary>
     /// Executes a BAML function.
