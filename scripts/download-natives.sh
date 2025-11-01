@@ -3,8 +3,6 @@
 # download-natives.sh
 # Downloads native BAML binaries from GitHub releases and places them in the runtimes directory.
 
-set -e
-
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -122,8 +120,10 @@ download_binary() {
     echo -e "  ${GRAY}Binary saved to: $dest_path${NC}"
 
     # Verify file size
-    local file_size=$(stat -f%z "$dest_path" 2>/dev/null || stat -c%s "$dest_path" 2>/dev/null)
-    echo -e "  ${GRAY}Size: $file_size bytes${NC}"
+    local file_size=$(stat -f%z "$dest_path" 2>/dev/null || stat -c%s "$dest_path" 2>/dev/null || echo "unknown")
+    if [ "$file_size" != "unknown" ]; then
+        echo -e "  ${GRAY}Size: $file_size bytes${NC}"
+    fi
 
     # Make executable on Unix platforms
     chmod +x "$dest_path" 2>/dev/null || true
