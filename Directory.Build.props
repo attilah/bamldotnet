@@ -1,34 +1,50 @@
 <Project>
   <!-- Shared properties for all projects in the Baml.Net solution -->
+
   <PropertyGroup>
     <!-- Version Information -->
     <!-- BamlNativeVersion: Version of BAML native binaries (updated by download-natives.ps1) -->
     <!-- All packages will use the same version as the native binaries -->
     <BamlNativeVersion>0.212.0</BamlNativeVersion>
-    <Version>$(BamlNativeVersion)</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0.0</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+  </PropertyGroup>
 
-    <!-- Package Metadata -->
-    <Authors>Baml.Net Team</Authors>
-    <Company>Baml.Net</Company>
-    <Copyright>Copyright (c) 2025 Baml.Net</Copyright>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/yourusername/Baml.Net</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/yourusername/Baml.Net</PackageProjectUrl>
-    <PackageTags>baml;ai;llm;orchestration;net9</PackageTags>
-
+  <PropertyGroup>
     <!-- .NET 9.0 Settings -->
     <TargetFramework>net9.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
 
+  <PropertyGroup>
     <!-- Build Settings -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Output Directories -->
+    <ArtifactsDir>$(MSBuildThisFileDirectory)/artifacts</ArtifactsDir>
+    <PackageOutputPath>$(ArtifactsDir)/nuget</PackageOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- NuGet Package Metadata -->
+    <!-- These properties apply to all packages in the solution -->
+    <Authors>Baml.Net Contributors</Authors>
+    <Company>Baml.Net</Company>
+    <Copyright>Copyright (c) 2025 Baml.Net</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <RepositoryUrl>https://github.com/BoundaryML/Baml.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/BoundaryML/Baml.Net</PackageProjectUrl>
+    <PackageTags>baml;ai;llm;agent;agentic;orchestration</PackageTags>
 
     <!-- Package Generation -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -36,10 +52,9 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <!-- Global NuGet Package Versions -->
-  <!-- Always verify latest versions at https://www.nuget.org/packages before updating -->
-  <PropertyGroup>
-    <GoogleProtobufVersion>3.28.3</GoogleProtobufVersion>
-    <GrpcToolsVersion>2.66.0</GrpcToolsVersion>
-  </PropertyGroup>
+  <!-- Package Assets (Icon and License) -->
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE" Pack="true" PackagePath="\" />
+    <None Include="$(MSBuildThisFileDirectory)assets\logo.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

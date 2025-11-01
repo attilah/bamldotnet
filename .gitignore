@@ -52,10 +52,8 @@ TestResults/
 *.coverage
 *.coveragexml
 
-# Native binaries (will be downloaded)
-src/Native/*/runtimes/*/native/*.dll
-src/Native/*/runtimes/*/native/*.so
-src/Native/*/runtimes/*/native/*.dylib
+# Native binaries (will be downloaded to central runtimes folder)
+runtimes/
 
 # macOS
 .DS_Store
@@ -73,3 +71,4 @@ Desktop.ini
 /baml
 /cc
 
+.claude/settings.local.json

@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Protocol Buffers - Versions managed in Directory.Build.props -->
-    <PackageReference Include="Google.Protobuf" Version="$(GoogleProtobufVersion)" />
-    <PackageReference Include="Grpc.Tools" Version="$(GrpcToolsVersion)" PrivateAssets="All" />
+    <!-- Protocol Buffers - Versions managed in Directory.Packages.props -->
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.Tools" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Protobuf compilation -->
@@ -31,22 +31,22 @@
 
   <!-- Reference native packages for development (when not using NuGet package) -->
   <ItemGroup>
-    <ProjectReference Include="../Native/Baml.Net.Native.win-x64/Baml.Net.Native.win-x64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.win-x64/Baml.Net.Native.win-x64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'win-x64' OR ('$(RuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Windows')))"
                       PrivateAssets="All" />
-    <ProjectReference Include="../Native/Baml.Net.Native.win-arm64/Baml.Net.Native.win-arm64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.win-arm64/Baml.Net.Native.win-arm64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'win-arm64'"
                       PrivateAssets="All" />
-    <ProjectReference Include="../Native/Baml.Net.Native.linux-x64/Baml.Net.Native.linux-x64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.linux-x64/Baml.Net.Native.linux-x64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'linux-x64' OR ('$(RuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux')))"
                       PrivateAssets="All" />
-    <ProjectReference Include="../Native/Baml.Net.Native.linux-arm64/Baml.Net.Native.linux-arm64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.linux-arm64/Baml.Net.Native.linux-arm64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'linux-arm64'"
                       PrivateAssets="All" />
-    <ProjectReference Include="../Native/Baml.Net.Native.osx-x64/Baml.Net.Native.osx-x64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.osx-x64/Baml.Net.Native.osx-x64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'osx-x64'"
                       PrivateAssets="All" />
-    <ProjectReference Include="../Native/Baml.Net.Native.osx-arm64/Baml.Net.Native.osx-arm64.csproj"
+    <ProjectReference Include="../../bindings/Baml.Net.Native.osx-arm64/Baml.Net.Native.osx-arm64.csproj"
                       Condition="'$(RuntimeIdentifier)' == 'osx-arm64' OR ('$(RuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('OSX')))"
                       PrivateAssets="All" />
   </ItemGroup>

@@ -19,10 +19,11 @@ public class BamlRuntimeIntegrationTests : IDisposable
 
     public BamlRuntimeIntegrationTests()
     {
-        // Use the test BAML files from cc/baml/baml_src
+        // Use the test BAML files from TestData/BamlFiles
+        // These files are copied to the output directory during build
         _bamlSrcPath = Path.Combine(
             Directory.GetCurrentDirectory(),
-            "..", "..", "..", "..", "..", "cc", "baml", "baml_src");
+            "TestData", "BamlFiles");
     }
 
     private static Dictionary<string, string> GetEnvVars()

@@ -32,21 +32,20 @@ public abstract class BamlTestBase : IDisposable
         }
 
         // Set path to test BAML files
+        // These files are copied to the output directory during build
         _bamlSrcPath = Path.Combine(
             Directory.GetCurrentDirectory(),
-            "..", "..", "..", "TestBamlSrc");
+            "TestBamlSrc");
 
         Console.WriteLine($"[BamlTestBase] BAML source path: {_bamlSrcPath}");
 
         // Verify BAML source directory exists
-        // TEMPORARILY DISABLED FOR DEBUGGING
-        //if (!Directory.Exists(_bamlSrcPath))
-        //{
-        //    throw new InvalidOperationException(
-        //        $"BAML source directory not found: {_bamlSrcPath}\n\n" +
-        //        "Please run the sync script to copy test BAML files:\n" +
-        //        "  ./sync-test-baml-files.sh\n");
-        //}
+        if (!Directory.Exists(_bamlSrcPath))
+        {
+            throw new InvalidOperationException(
+                $"BAML source directory not found: {_bamlSrcPath}\n\n" +
+                "The TestBamlSrc directory should be automatically copied during build.");
+        }
 
         Console.WriteLine("[BamlTestBase] Constructor completed");
     }

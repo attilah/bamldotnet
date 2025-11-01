@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet build:*)",
+      "Bash(chmod:*)",
+      "Bash(for rid in osx-x64 osx-arm64 linux-x64 linux-arm64)",
+      "Bash(do)",
+      "Bash(src=\"/Users/attila/workspaces/bamldotnet/bindings/Baml.Net.Native.$rid/runtimes/$rid/native\")",
+      "Bash(if [ -d \"$src\" ])",
+      "Bash(then)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "Bash(if [ -d \"/Users/attila/workspaces/bamldotnet/runtimes/$rid/native\" ])",
+      "Bash(curl:*)",
+      "Bash(./scripts/download-natives.sh:*)",
+      "Bash(brew list:*)",
+      "Bash(brew install:*)",
+      "Bash(python3:*)",
+      "Bash(rsvg-convert:*)",
+      "Bash(unzip:*)",
+      "Bash(dotnet pack:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(dotnet test:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

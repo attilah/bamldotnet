@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Runtime Identifier for this package -->
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+
+    <!-- Package Identity -->
+    <PackageId>$(NativePackageIdPrefix).$(RuntimeIdentifier)</PackageId>
+    <Description>Linux x64 native binaries for Baml.Net</Description>
+
+    <!-- Native library name for this platform -->
+    <BamlNativeLibraryName>libbaml_cffi.so</BamlNativeLibraryName>
+  </PropertyGroup>
+</Project>

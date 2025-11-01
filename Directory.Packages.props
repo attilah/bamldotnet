@@ -1,0 +1,23 @@
+<Project>
+  <!-- Central Package Management for Baml.Net solution -->
+  <!-- See: https://learn.microsoft.com/nuget/consume-packages/central-package-management -->
+
+  <PropertyGroup>
+    <!-- Enable Central Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <!-- Package Versions -->
+  <ItemGroup>
+    <!-- Protocol Buffers and gRPC -->
+    <PackageVersion Include="Google.Protobuf" Version="3.28.3" />
+    <PackageVersion Include="Grpc.Tools" Version="2.66.0" />
+
+    <!-- Testing Frameworks -->
+    <PackageVersion Include="DotNetEnv" Version="3.1.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="xunit.v3" Version="1.0.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+  </ItemGroup>
+</Project>
