@@ -7,11 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageReference Include="xunit.v3" Version="1.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0" />
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <!-- Versions managed in Directory.Packages.props -->
+    <PackageReference Include="DotNetEnv" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -23,5 +24,15 @@
 
   <ItemGroup>
     <None Include="xunit.v3.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Test BAML files - copy to output directory for integration tests -->
+    <None Include="TestData\BamlFiles\**\*.baml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Comprehensive test BAML files and assets - copy to output directory -->
+    <None Include="TestBamlSrc\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

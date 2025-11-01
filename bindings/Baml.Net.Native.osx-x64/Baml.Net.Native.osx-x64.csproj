@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Runtime Identifier for this package -->
+    <RuntimeIdentifier>osx-x64</RuntimeIdentifier>
+
+    <!-- Package Identity -->
+    <PackageId>$(NativePackageIdPrefix).$(RuntimeIdentifier)</PackageId>
+    <Description>macOS x64 native binaries for Baml.Net</Description>
+
+    <!-- Native library name for this platform -->
+    <BamlNativeLibraryName>libbaml_cffi.dylib</BamlNativeLibraryName>
+  </PropertyGroup>
+</Project>

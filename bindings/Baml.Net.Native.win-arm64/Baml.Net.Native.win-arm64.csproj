@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Runtime Identifier for this package -->
+    <RuntimeIdentifier>win-arm64</RuntimeIdentifier>
+
+    <!-- Package Identity -->
+    <PackageId>$(NativePackageIdPrefix).$(RuntimeIdentifier)</PackageId>
+    <Description>Windows ARM64 native binaries for Baml.Net</Description>
+
+    <!-- Native library name for this platform -->
+    <BamlNativeLibraryName>baml_cffi.dll</BamlNativeLibraryName>
+  </PropertyGroup>
+</Project>

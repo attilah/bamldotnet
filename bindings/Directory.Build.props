@@ -1,0 +1,41 @@
+<Project>
+  <!-- Shared properties for all native runtime packages -->
+  <!-- This file is automatically imported by all projects in the bindings/ directory -->
+
+  <PropertyGroup>
+    <!-- Override target framework for native packages -->
+    <!-- Native packages target netstandard2.0 for maximum compatibility -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+
+    <!-- Common prefix for all native packages -->
+    <NativePackageIdPrefix>Baml.Net.Native</NativePackageIdPrefix>
+
+    <!-- This is a runtime package with no managed code -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DevelopmentDependency>true</DevelopmentDependency>
+
+    <!-- Override package generation settings from root -->
+    <!-- Only generate package when explicitly requested -->
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <!-- Include native binary from central runtimes folder -->
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)../runtimes/$(RuntimeIdentifier)/$(BamlNativeLibraryName)">
+      <PackagePath>runtimes/$(RuntimeIdentifier)/native/</PackagePath>
+      <Pack>true</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>runtimes/$(RuntimeIdentifier)/native/$(BamlNativeLibraryName)</Link>
+    </Content>
+  </ItemGroup>
+
+  <!-- MSBuild targets for copying native library -->
+  <!-- Only use buildTransitive for modern PackageReference-based projects -->
+  <ItemGroup>
+    <Content Include="buildTransitive\$(NativePackageIdPrefix).targets">
+      <PackagePath>buildTransitive/</PackagePath>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
+</Project>

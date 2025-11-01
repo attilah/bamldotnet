@@ -1,0 +1,4 @@
+<Project>
+  <!-- This targets file is automatically imported for transitive PackageReference dependencies -->
+  <!-- NuGet will automatically resolve and copy the correct native library based on RuntimeIdentifier -->
+</Project>
