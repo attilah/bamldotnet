@@ -32,6 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Minimal test BAML files for standalone tests -->
+    <None Include="MinimalTestBaml\**\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- Comprehensive test BAML files and assets - copy to output directory -->
     <None Include="TestBamlSrc\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

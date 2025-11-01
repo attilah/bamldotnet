@@ -13,14 +13,34 @@ namespace Baml.Net.Tests.Core;
 /// </summary>
 public class StandaloneApiTest
 {
+    private static string? FindProjectRoot()
+    {
+        var current = Directory.GetCurrentDirectory();
+        while (current != null)
+        {
+            if (File.Exists(Path.Combine(current, ".env")) ||
+                File.Exists(Path.Combine(current, "Baml.Net.sln")) ||
+                Directory.Exists(Path.Combine(current, ".git")))
+            {
+                return current;
+            }
+            current = Directory.GetParent(current)?.FullName;
+        }
+        return null;
+    }
+
     [Fact]
     public async Task Standalone_MinimalBAML_CallsAPI_Successfully()
     {
-        // Load .env manually
-        var envPath = "/Users/attila/workspaces/bamldotnet/.env";
-        if (File.Exists(envPath))
+        // Load .env manually from project root
+        var projectRoot = FindProjectRoot();
+        if (projectRoot != null)
         {
-            Env.Load(envPath);
+            var envPath = Path.Combine(projectRoot, ".env");
+            if (File.Exists(envPath))
+            {
+                Env.Load(envPath);
+            }
         }
 
         var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
@@ -30,8 +50,9 @@ public class StandaloneApiTest
             return;
         }
 
-        // Use minimal BAML directory
-        var minimalPath = "/Users/attila/workspaces/bamldotnet/tests/Baml.Net.Tests/MinimalTestBaml";
+        // Use minimal BAML directory (relative to test assembly)
+        var testDir = Path.GetDirectoryName(typeof(StandaloneApiTest).Assembly.Location)!;
+        var minimalPath = Path.Combine(testDir, "MinimalTestBaml");
 
         Console.WriteLine("=== Standalone API Test ===");
         Console.WriteLine($"BAML Path: {minimalPath}");
