@@ -16,22 +16,35 @@ The solution structure and native package framework have been successfully imple
 Baml.Net/
 ├── Baml.Net.sln                  # Main solution file
 ├── Directory.Build.props          # Shared MSBuild properties
-├── BUILD_STATUS.md               # Detailed build status report
-├── baml_dotnet.md                # Complete implementation guide
+├── Directory.Packages.props       # Centralized package version management
+├── global.json                    # .NET SDK version pinning
 │
 ├── src/
-│   ├── Baml.Net/                 # Main managed library (net9.0)
-│   │   ├── Baml.Net.csproj
-│   │   └── build/
-│   │       └── Baml.Net.targets  # Auto-reference native packages
-│   │
-│   └── Native/                   # Platform-specific native packages
-│       ├── Baml.Net.Native.win-x64/
-│       ├── Baml.Net.Native.win-arm64/
-│       ├── Baml.Net.Native.linux-x64/
-│       ├── Baml.Net.Native.linux-arm64/
-│       ├── Baml.Net.Native.osx-x64/
-│       └── Baml.Net.Native.osx-arm64/
+│   └── Baml.Net/                 # Main managed library (net9.0)
+│       ├── Baml.Net.csproj
+│       ├── Core/                 # BamlRuntime, BamlRuntimeAsync
+│       ├── FFI/                  # P/Invoke interop layer
+│       ├── Types/                # BAML types and builders
+│       └── Extensions/           # Helper extensions
+│
+├── bindings/                     # Platform-specific native packages
+│   ├── Directory.Build.props     # Shared native package config
+│   ├── Baml.Net.Native.win-x64/
+│   ├── Baml.Net.Native.win-arm64/
+│   ├── Baml.Net.Native.linux-x64/
+│   ├── Baml.Net.Native.linux-arm64/
+│   ├── Baml.Net.Native.osx-x64/
+│   └── Baml.Net.Native.osx-arm64/
+│
+├── tests/
+│   └── Baml.Net.Tests/           # Unit and integration tests
+│       ├── TestBamlSrc/          # BAML test files
+│       └── TestData/             # Test data files
+│
+└── scripts/
+    ├── download-natives.sh       # Download native binaries
+    ├── download-natives.ps1      # Windows PowerShell version
+    └── sync-test-baml-files.sh   # Sync BAML test files
 ```
 
 ## 🚀 Quick Start
@@ -107,37 +120,47 @@ NuGet package versions are centrally managed using MSBuild properties:
 
 ### Adding Native Binaries
 
-1. Download BAML native binaries from releases
-2. Place in respective `src/Native/Baml.Net.Native.{rid}/runtimes/{rid}/native/`
-3. Enable package generation in Directory.Build.props:
-   ```xml
-   <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-   ```
-4. Build: `dotnet pack`
+Use the automated download script to fetch native binaries:
+
+```bash
+# Download latest BAML native binaries
+./scripts/download-natives.sh
+
+# Or download a specific version
+./scripts/download-natives.sh -v 0.212.0
+
+# Force re-download
+./scripts/download-natives.sh -v 0.212.0 -f
+```
+
+Binaries are placed in `runtimes/{rid}/native/` directories. To build packages:
+
+```bash
+dotnet pack
+```
+
+Packages are output to `artifacts/nuget/`.
 
 ### Adding Managed Code
 
-The main `Baml.Net` package is ready for implementation:
+The main `Baml.Net` package contains the .NET runtime implementation:
 
-**Planned Structure** (from baml_dotnet.md):
+**Current Structure**:
 ```
 src/Baml.Net/
-├── Core/           # BamlRuntime, RuntimeContext
-├── FFI/            # P/Invoke declarations
-├── Protobuf/       # Generated protobuf classes
-├── Types/          # BamlImage, TypeBuilder, etc.
-├── Streaming/      # IAsyncEnumerable support
-├── Events/         # Event system
-├── Client/         # ClientRegistry
-├── Logging/        # Collector, FunctionLog
-├── Exceptions/     # Custom exceptions
-└── Extensions/     # Helper methods
+├── Core/           # BamlRuntime, BamlRuntimeAsync
+├── FFI/            # P/Invoke interop layer
+├── Types/          # BAML types (BamlImage, BamlAudio, etc.)
+├── Extensions/     # Helper extensions
+└── Exceptions/     # Custom exceptions
 ```
+
+See [thoughts/baml_dotnet.md](thoughts/baml_dotnet.md) for complete implementation details.
 
 ## 📚 Documentation
 
-- **[baml_dotnet.md](baml_dotnet.md)**: Complete implementation guide with TypeScript parity features
-- **[BUILD_STATUS.md](BUILD_STATUS.md)**: Current build status and next steps
+- **[thoughts/baml_dotnet.md](thoughts/baml_dotnet.md)**: Complete implementation guide with TypeScript parity features
+- **[scripts/README.md](scripts/README.md)**: Scripts documentation and usage
 
 ## 🤝 Contributing
 
