@@ -41,7 +41,7 @@ namespace Baml.Net.SourceGenerator
 
                 // Parse metadata
                 var parser = new MetadataParser();
-                var metadata = parser.Parse(metadataJson);
+                var metadata = parser.Parse(metadataJson!);
 
                 // Generate code
                 return GenerateClientCode(metadata);

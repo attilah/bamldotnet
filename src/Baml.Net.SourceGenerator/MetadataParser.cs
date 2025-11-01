@@ -22,6 +22,31 @@ namespace Baml.Net.SourceGenerator
         {
             try
             {
+                // Strip comment lines that BAML CLI adds at the beginning
+                var lines = json.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                var jsonStartIndex = -1;
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    var trimmedLine = lines[i].Trim();
+                    if (trimmedLine.StartsWith("{") || trimmedLine.StartsWith("["))
+                    {
+                        jsonStartIndex = i;
+                        break;
+                    }
+                }
+
+                if (jsonStartIndex >= 0)
+                {
+                    // Reconstruct JSON starting from the first { or [
+                    var jsonLines = new System.Collections.Generic.List<string>();
+                    for (int i = jsonStartIndex; i < lines.Length; i++)
+                    {
+                        jsonLines.Add(lines[i]);
+                    }
+                    json = string.Join("\n", jsonLines);
+                }
+
                 var metadata = JsonSerializer.Deserialize<BamlMetadata>(json, _options);
                 if (metadata == null)
                 {

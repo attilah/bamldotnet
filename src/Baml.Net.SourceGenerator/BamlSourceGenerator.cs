@@ -75,7 +75,7 @@ namespace Baml.Net.SourceGenerator
                 try
                 {
                     // Generate code - pass ALL additional files so it can find metadata
-                    var generator = new BamlCodeGenerator(enableLogging, rootNamespace);
+                    var generator = new BamlCodeGenerator(enableLogging, rootNamespace ?? "BamlClient");
                     var generatedCode = generator.GenerateCode(additionalFiles.ToList());
 
                     if (!string.IsNullOrEmpty(generatedCode))

@@ -209,7 +209,7 @@ public sealed class BamlRuntimeAsync : IDisposable
         };
 
         // Start the streaming operation on a background thread
-        var streamTask = Task.Run(async () =>
+        var streamTask = Task.Run(() =>
         {
             try
             {

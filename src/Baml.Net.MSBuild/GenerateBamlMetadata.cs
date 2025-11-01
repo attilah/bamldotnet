@@ -40,6 +40,10 @@ namespace Baml.Net.MSBuild
         [Output]
         public string? MetadataFile { get; set; }
 
+        /// <summary>
+        /// Executes the BAML metadata generation task.
+        /// </summary>
+        /// <returns>true if the task executed successfully; otherwise, false.</returns>
         public override bool Execute()
         {
             try
